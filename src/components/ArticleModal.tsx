@@ -13,8 +13,8 @@ export function ArticleModal({ article, onClose }: ArticleModalProps) {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="sticky top-4 right-4 float-right z-10 p-2 glass-strong rounded-full hover:bg-destructive/20 transition-colors"
-        >
+          className="sticky top-4 right-4 float-right z-10 p-2 glass-strong rounded-full hover:bg-destructive/20 transition-colors">
+
           <X className="w-6 h-6" />
         </button>
 
@@ -27,11 +27,11 @@ export function ArticleModal({ article, onClose }: ArticleModalProps) {
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8 pb-6 border-b border-primary/20">
             <span>By Jeremy Taylor, NeurusAGi</span>
             <span>•</span>
-            <span>{new Date(article.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            
           </div>
 
           {/* Article Content */}
-          <div 
+          <div
             className="prose prose-invert prose-lg max-w-none
               prose-headings:gradient-text 
               prose-p:text-foreground prose-p:leading-relaxed prose-p:mb-6
@@ -40,10 +40,17 @@ export function ArticleModal({ article, onClose }: ArticleModalProps) {
               prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic
               prose-ul:list-disc prose-ul:pl-6 prose-ul:space-y-2
               prose-ol:list-decimal prose-ol:pl-6 prose-ol:space-y-2"
-            dangerouslySetInnerHTML={{ __html: article.content }}
-          />
+
+
+
+
+
+
+
+            dangerouslySetInnerHTML={{ __html: article.content }} />
+
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
