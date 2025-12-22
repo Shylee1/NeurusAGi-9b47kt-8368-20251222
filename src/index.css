@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 215 28% 7%;
+    --foreground: 180 100% 95%;
+    --card: 215 28% 10%;
+    --card-foreground: 180 100% 95%;
+    --popover: 215 28% 8%;
+    --popover-foreground: 180 100% 95%;
+    --primary: 180 100% 41%;
+    --primary-foreground: 215 28% 7%;
+    --secondary: 45 100% 51%;
+    --secondary-foreground: 215 28% 7%;
+    --muted: 215 20% 20%;
+    --muted-foreground: 180 50% 70%;
+    --accent: 45 100% 60%;
+    --accent-foreground: 215 28% 7%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 180 30% 25%;
+    --input: 180 30% 25%;
+    --ring: 180 100% 41%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Fixed Background Logo */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://cdn-ai.onspace.ai/onspace/files/9ShpkhYni95AhHPoX9TQEr/IMG_3600.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/50 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/70;
+  }
+}
+
+@layer components {
+  /* Glass Morphism Effect */
+  .glass {
+    @apply backdrop-blur-md bg-card/30 border border-primary/20;
+  }
+
+  .glass-strong {
+    @apply backdrop-blur-lg bg-card/50 border border-primary/30;
+  }
+
+  /* 3D Card Effect */
+  .card-3d {
+    @apply relative transform-gpu transition-all duration-300;
+    transform-style: preserve-3d;
+  }
+
+  .card-3d:hover {
+    @apply scale-105;
+    transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) scale(1.05);
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-secondary;
+  }
+
+  /* Neural Glow */
+  .neural-glow {
+    box-shadow: 0 0 30px rgba(0, 206, 209, 0.3),
+                0 0 60px rgba(255, 215, 0, 0.2),
+                inset 0 0 20px rgba(0, 206, 209, 0.1);
+  }
+
+  /* Shimmer Effect */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 206, 209, 0.4) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+
+  /* Particle Background */
+  .particle-bg {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .particle-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 20% 50%, rgba(0, 206, 209, 0.1) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                      radial-gradient(circle at 40% 20%, rgba(32, 178, 170, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    animation: float 15s ease-in-out infinite;
+  }
+
+  /* Button Variants */
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-primary/50 hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply bg-gradient-to-r from-secondary to-accent hover:from-secondary/90 hover:to-accent/90 text-secondary-foreground font-semibold px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-secondary/50 hover:scale-105;
+  }
+
+  .btn-ghost {
+    @apply glass hover:glass-strong text-foreground px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105;
+  }
+
+  /* Input Fields */
+  .input-field {
+    @apply glass px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 text-foreground placeholder:text-muted-foreground;
+  }
+
+  /* Labeled Input Container */
+  .input-container {
+    @apply space-y-2;
+  }
+
+  .input-label {
+    @apply text-sm font-medium text-muted-foreground uppercase tracking-wide;
+  }
+
+  /* Section Container */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24;
+  }
+
+  /* Feature Block */
+  .feature-block {
+    @apply glass-strong rounded-xl p-8 card-3d neural-glow;
+  }
+
+  /* Heading Styles */
+  .heading-xl {
+    @apply text-4xl sm:text-5xl lg:text-6xl font-bold gradient-text;
+  }
+
+  .heading-lg {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text;
+  }
+
+  .heading-md {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground;
+  }
+
+  .heading-sm {
+    @apply text-xl sm:text-2xl font-semibold text-foreground;
+  }
+}
+
+/* Utility Classes */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+}
