@@ -16,7 +16,7 @@ interface PricingTier {
 
 export function PricingPage() {
   const navigate = useNavigate();
-  const [hoveredTier, setHoveredTier] = useState<string | null>(null);
+  const [flipped, setFlipped] = useState<string | null>(null);
 
   const tiers: PricingTier[] = [
     {
@@ -25,7 +25,7 @@ export function PricingPage() {
       icon: Sparkles,
       price: 19,
       description: 'Essential AI capabilities for everyday use',
-      usageLimit: 'Unlimited - Have fun!',
+      usageLimit: 'Unlimited usage - Have fun!',
       features: [
         'No usage limits',
         'Basic AI processing',
@@ -54,7 +54,7 @@ export function PricingPage() {
       name: 'Developer',
       icon: Code,
       price: 199,
-      description: 'For developers building AGi-powered applications',
+      description: 'For developers building AGi powered applications',
       usageLimit: '500 inputs per day with basic AGi capabilities',
       features: [
         '500 daily AGi inputs',
@@ -94,7 +94,7 @@ export function PricingPage() {
       description: 'Quantum computing for research and innovation',
       usageLimit: 'Unlimited inputs with quantum computing capabilities',
       features: [
-        'Unlimited quantum-powered inputs',
+        'Unlimited quantum powered inputs',
         'Collaboration & test environments',
         'Simulation environments',
         'Immediate access to new tools',
@@ -117,7 +117,7 @@ export function PricingPage() {
         'Unlimited enterprise inputs',
         'Private deployment',
         'Full system customization',
-        'White-label options',
+        'White label options',
         '20% revenue share for partners',
         'Dedicated account management',
         '24/7 support',
@@ -135,90 +135,96 @@ export function PricingPage() {
   return (
     <div className="min-h-screen">
       <section className="section-container">
-        {/* Header */}
         <div className="text-center mb-16">
           <h1 className="heading-xl mb-4">Choose Your Intelligence Level</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            From everyday AI to quantum-powered AGi, select the tier that matches your ambitions
+            From everyday AI to quantum powered AGi, select the tier that matches your ambitions
           </p>
         </div>
 
-        {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto perspective-1000">
-          {tiers.map((tier, index) => {
+          {tiers.map((tier) => {
             const Icon = tier.icon;
-            const isHovered = hoveredTier === tier.id;
+            const isFlipped = flipped === tier.id;
             
             return (
               <div
                 key={tier.id}
-                className={`relative group preserve-3d transition-all duration-500 ${
+                className={`relative preserve-3d transition-all duration-700 cursor-pointer ${
                   tier.highlighted ? 'lg:scale-105 z-10' : ''
                 }`}
-                onMouseEnter={() => setHoveredTier(tier.id)}
-                onMouseLeave={() => setHoveredTier(null)}
                 style={{
-                  transform: isHovered 
-                    ? 'perspective(1000px) rotateY(-5deg) rotateX(5deg) scale(1.05)' 
-                    : 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1)',
+                  transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                  transformStyle: 'preserve-3d',
                 }}
+                onClick={() => setFlipped(isFlipped ? null : tier.id)}
               >
-                {/* Glow Effect */}
-                {tier.highlighted && (
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
+                {tier.highlighted && !isFlipped && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-2xl blur-xl opacity-50"></div>
                 )}
 
-                {/* Card */}
-                <div className={`relative glass-strong rounded-2xl p-8 h-full flex flex-col ${
-                  tier.highlighted ? 'border-2 border-primary' : ''
-                }`}>
-                  {/* Badge */}
+                {/* Front of card */}
+                <div
+                  className={`relative glass-strong rounded-2xl p-8 h-full backface-hidden ${
+                    tier.highlighted ? 'border-2 border-primary' : ''
+                  }`}
+                  style={{ backfaceVisibility: 'hidden' }}
+                >
                   {tier.highlighted && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-primary to-secondary rounded-full text-xs font-semibold text-primary-foreground">
+                    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-primary to-secondary rounded-full text-xs font-semibold text-primary-foreground">
                       MOST POPULAR
                     </div>
                   )}
 
-                  {/* Icon */}
-                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${tier.color} p-[2px] mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${tier.color} p-[2px] mb-6 mt-${tier.highlighted ? '8' : '0'}`}>
                     <div className="w-full h-full rounded-xl bg-background/90 flex items-center justify-center">
                       <Icon className="w-8 h-8 text-primary" />
                     </div>
                   </div>
 
-                  {/* Name & Price */}
                   <h3 className="heading-md text-2xl mb-2">{tier.name}</h3>
                   <div className="mb-4">
                     <span className="text-4xl font-bold gradient-text">${tier.price}</span>
                     <span className="text-muted-foreground">/month</span>
                   </div>
 
-                  {/* Description */}
                   <p className="text-sm text-muted-foreground mb-6">{tier.description}</p>
 
-                  {/* Usage Limit */}
                   <div className="p-3 glass rounded-lg mb-6">
                     <p className="text-xs font-semibold text-primary mb-1">USAGE LIMIT</p>
                     <p className="text-sm text-foreground">{tier.usageLimit}</p>
                   </div>
 
-                  {/* Features */}
-                  <ul className="space-y-3 mb-8 flex-1">
-                    {tier.features.map((feature, i) => (
-                      <li key={i} className="flex items-start space-x-2">
-                        <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-muted-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <p className="text-xs text-center text-muted-foreground mb-4">Click to see features</p>
+                </div>
 
-                  {/* CTA Button */}
+                {/* Back of card */}
+                <div
+                  className="absolute inset-0 glass-strong rounded-2xl p-8 backface-hidden flex flex-col"
+                  style={{ 
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)'
+                  }}
+                >
+                  <div className="flex-1 overflow-y-auto">
+                    <h3 className="heading-sm text-xl mb-4 gradient-text">{tier.name} Features</h3>
+                    <ul className="space-y-3 mb-6">
+                      {tier.features.map((feature, i) => (
+                        <li key={i} className="flex items-start space-x-2">
+                          <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                          <span className="text-sm text-foreground">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
                   <button
-                    onClick={() => handleSelectTier(tier.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectTier(tier.id);
+                    }}
                     className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 ${
-                      tier.highlighted
-                        ? 'btn-primary'
-                        : 'btn-ghost'
+                      tier.highlighted ? 'btn-primary' : 'btn-ghost'
                     }`}
                   >
                     Get Started
@@ -229,7 +235,6 @@ export function PricingPage() {
           })}
         </div>
 
-        {/* Additional Info */}
         <div className="mt-16 glass-strong rounded-2xl p-8 neural-glow text-center max-w-4xl mx-auto">
           <h3 className="heading-sm text-xl mb-4">All Plans Include</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -248,7 +253,6 @@ export function PricingPage() {
           </div>
         </div>
 
-        {/* Enterprise Contact */}
         <div className="mt-12 text-center">
           <p className="text-muted-foreground mb-4">
             Need a custom solution? Enterprise plans can be tailored to your specific needs.

@@ -5,7 +5,7 @@ export function AboutPage() {
     {
       icon: Brain,
       title: 'Hyper-Realistic Generation',
-      description: 'Quantum-enhanced generative ability creating unbelievably realistic content—from lifelike human experiences to the most innovative and creative outputs, adhering explicitly to every detail of your instructions.',
+      description: 'Quantum enhanced generative ability creating unbelievably realistic content: from lifelike human experiences to the most innovative and creative outputs, adhering explicitly to every detail of your instructions.',
     },
     {
       icon: Cpu,
@@ -64,7 +64,7 @@ export function AboutPage() {
         <div className="glass-strong rounded-2xl p-8 sm:p-12 neural-glow mb-16">
           <h2 className="heading-md text-center mb-8">Our Mission</h2>
           <p className="text-lg text-muted-foreground leading-relaxed text-center max-w-3xl mx-auto">
-            NeurusAGi represents a quantum leap in intelligence—moving beyond the limitations of traditional 
+            NeurusAGi represents a quantum leap in intelligence, moving beyond the limitations of traditional 
             AI pattern matching to achieve true cognitive reasoning. We're committed to delivering 100% accuracy, 
             unparalleled creative generation, and enterprise-grade reliability while maintaining ethical alignment 
             and user privacy.
