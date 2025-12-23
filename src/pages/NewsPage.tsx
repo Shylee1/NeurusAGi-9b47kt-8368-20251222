@@ -131,12 +131,7 @@ export function NewsPage() {
                     <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground pt-4 border-t border-primary/20">
                       <span className="flex items-center space-x-1">
                         <User className="w-4 h-4" />
-                        <span>Jeremy Taylor, NeurusAGi</span>
-                      </span>
-                      <span>•</span>
-                      <span className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{new Date(allArticles[currentArticleIndex].publishedDate || allArticles[currentArticleIndex].created_at).toLocaleDateString()}</span>
+                        <span>By Jeremy Taylor, NeurusAGi</span>
                       </span>
                     </div>
                     <button className="btn-primary mt-4">
@@ -171,7 +166,7 @@ export function NewsPage() {
                       {article.title}
                     </h3>
                     <p className="text-xs text-muted-foreground mt-2">
-                      {new Date(article.publishedDate || article.created_at).toLocaleDateString()}
+                      By Jeremy Taylor, NeurusAGi
                     </p>
                   </div>
                 ))}

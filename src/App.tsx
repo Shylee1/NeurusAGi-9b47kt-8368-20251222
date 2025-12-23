@@ -3,6 +3,7 @@ import { Toaster } from 'sonner';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { HomePage } from './pages/HomePage';
+import { AboutPage } from './pages/AboutPage';
 import { NewsPage } from './pages/NewsPage';
 import { PricingPage } from './pages/PricingPage';
 import { InvestorsPage } from './pages/InvestorsPage';
@@ -23,6 +24,7 @@ function App() {
         <main className="flex-1 pt-16 sm:pt-20">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/news" element={<NewsPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/investors" element={<InvestorsPage />} />

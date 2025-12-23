@@ -26,8 +26,6 @@ export function ArticleModal({ article, onClose }: ArticleModalProps) {
           {/* Meta Info */}
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8 pb-6 border-b border-primary/20">
             <span>By Jeremy Taylor, NeurusAGi</span>
-            <span>•</span>
-            
           </div>
 
           {/* Article Content */}

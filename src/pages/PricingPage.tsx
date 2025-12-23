@@ -1,188 +1,264 @@
-import { Link } from 'react-router-dom';
-import { Check, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { Check, Zap, Code, Rocket, Microscope, Building2, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+interface PricingTier {
+  id: string;
+  name: string;
+  icon: any;
+  price: number;
+  description: string;
+  usageLimit: string;
+  features: string[];
+  highlighted?: boolean;
+  color: string;
+}
 
 export function PricingPage() {
-  const tiers = [
+  const navigate = useNavigate();
+  const [hoveredTier, setHoveredTier] = useState<string | null>(null);
+
+  const tiers: PricingTier[] = [
     {
-      name: '[TIER 1 NAME]',
-      price: '[PRICE]',
-      description: '[Tier 1 description and target audience]',
+      id: 'neurusai',
+      name: 'NeurusAi',
+      icon: Sparkles,
+      price: 19,
+      description: 'Essential AI capabilities for everyday use',
+      usageLimit: 'Unlimited - Have fun!',
       features: [
-        '[Feature 1]',
-        '[Feature 2]',
-        '[Feature 3]',
-        '[Feature 4]',
+        'No usage limits',
+        'Basic AI processing',
+        'Community support',
+        'Standard response times',
       ],
-      stripeLink: '#',
-      highlighted: false,
+      color: 'from-blue-500 to-cyan-500',
     },
     {
-      name: '[TIER 2 NAME]',
-      price: '[PRICE]',
-      description: '[Tier 2 description and target audience]',
+      id: 'starter',
+      name: 'Starter',
+      icon: Zap,
+      price: 49,
+      description: 'Perfect for individuals exploring AGi capabilities',
+      usageLimit: '25 inputs per day with basic AGi capabilities',
       features: [
-        '[Feature 1]',
-        '[Feature 2]',
-        '[Feature 3]',
-        '[Feature 4]',
-        '[Feature 5]',
+        '25 daily AGi inputs',
+        'Basic AGi reasoning',
+        'Email support',
+        'Access to core features',
       ],
-      stripeLink: '#',
-      highlighted: false,
+      color: 'from-primary to-cyan-400',
     },
     {
-      name: '[TIER 3 NAME]',
-      price: '[PRICE]',
-      description: '[Tier 3 description and target audience]',
+      id: 'developer',
+      name: 'Developer',
+      icon: Code,
+      price: 199,
+      description: 'For developers building AGi-powered applications',
+      usageLimit: '500 inputs per day with basic AGi capabilities',
       features: [
-        '[Feature 1]',
-        '[Feature 2]',
-        '[Feature 3]',
-        '[Feature 4]',
-        '[Feature 5]',
-        '[Feature 6]',
+        '500 daily AGi inputs',
+        'Standard AGi processing',
+        'Basic API access with rate limiting',
+        'Usage monitoring dashboard',
+        'Community support forums',
+        'Basic documentation',
       ],
-      stripeLink: '#',
+      color: 'from-purple-500 to-pink-500',
+    },
+    {
+      id: 'pro',
+      name: 'Pro',
+      icon: Rocket,
+      price: 999,
+      description: 'Advanced AGi for professionals and businesses',
+      usageLimit: 'Unlimited inputs with advanced AGi capabilities',
+      features: [
+        'Unlimited AGi inputs',
+        'Custom model training',
+        'Full API access',
+        'Revenue sharing for resellers',
+        'Advanced features & capabilities',
+        'Priority email support',
+        'Advanced documentation',
+        'Request custom abilities directly from AGi',
+      ],
       highlighted: true,
+      color: 'from-amber-500 to-orange-500',
     },
     {
-      name: '[TIER 4 NAME]',
-      price: '[PRICE]',
-      description: '[Tier 4 description and target audience]',
+      id: 'scientific',
+      name: 'Scientific',
+      icon: Microscope,
+      price: 4999,
+      description: 'Quantum computing for research and innovation',
+      usageLimit: 'Unlimited inputs with quantum computing capabilities',
       features: [
-        '[Feature 1]',
-        '[Feature 2]',
-        '[Feature 3]',
-        '[Feature 4]',
-        '[Feature 5]',
-        '[Feature 6]',
-        '[Feature 7]',
+        'Unlimited quantum-powered inputs',
+        'Collaboration & test environments',
+        'Simulation environments',
+        'Immediate access to new tools',
+        'Specialized research tools',
+        'Research analysis capabilities',
+        'Dedicated support team',
+        'Direct phone support',
+        'Request custom abilities directly from AGi',
       ],
-      stripeLink: '#',
-      highlighted: false,
+      color: 'from-emerald-500 to-teal-500',
     },
     {
-      name: '[TIER 5 NAME]',
-      price: '[PRICE]',
-      description: '[Tier 5 description and target audience]',
+      id: 'enterprise',
+      name: 'Enterprise',
+      icon: Building2,
+      price: 9999,
+      description: 'Complete AGi solution with private deployment',
+      usageLimit: 'Unlimited inputs with private deployment options',
       features: [
-        '[Feature 1]',
-        '[Feature 2]',
-        '[Feature 3]',
-        '[Feature 4]',
-        '[Feature 5]',
-        '[Feature 6]',
-        '[Feature 7]',
-        '[Feature 8]',
+        'Unlimited enterprise inputs',
+        'Private deployment',
+        'Full system customization',
+        'White-label options',
+        '20% revenue share for partners',
+        'Dedicated account management',
+        '24/7 support',
+        'Direct phone support',
+        'Request custom abilities directly from AGi',
       ],
-      stripeLink: '#',
-      highlighted: false,
-    },
-    {
-      name: '[TIER 6 NAME]',
-      price: '[PRICE]',
-      description: '[Tier 6 description and target audience]',
-      features: [
-        '[Feature 1]',
-        '[Feature 2]',
-        '[Feature 3]',
-        '[Feature 4]',
-        '[Feature 5]',
-        '[Feature 6]',
-        '[Feature 7]',
-        '[Feature 8]',
-        '[Feature 9]',
-      ],
-      stripeLink: '#',
-      highlighted: false,
+      color: 'from-rose-500 to-red-500',
     },
   ];
 
+  const handleSelectTier = (tierId: string) => {
+    navigate('/signup', { state: { selectedTier: tierId } });
+  };
+
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <section className="section-container">
+        {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="heading-xl mb-4">Choose Your Plan</h1>
+          <h1 className="heading-xl mb-4">Choose Your Intelligence Level</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Select the perfect tier for your needs. All plans include core AGi capabilities.
+            From everyday AI to quantum-powered AGi, select the tier that matches your ambitions
           </p>
         </div>
 
-        {/* Pricing Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {tiers.map((tier, index) => (
-            <div
-              key={index}
-              className={`relative group ${
-                tier.highlighted
-                  ? 'lg:scale-105 lg:-translate-y-4'
-                  : ''
-              }`}
-            >
-              {tier.highlighted && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-secondary to-accent rounded-full">
-                  <span className="text-xs font-bold text-secondary-foreground flex items-center space-x-1">
-                    <Sparkles className="w-3 h-3" />
-                    <span>POPULAR</span>
-                  </span>
-                </div>
-              )}
-              
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto perspective-1000">
+          {tiers.map((tier, index) => {
+            const Icon = tier.icon;
+            const isHovered = hoveredTier === tier.id;
+            
+            return (
               <div
-                className={`h-full feature-block perspective-1000 ${
-                  tier.highlighted
-                    ? 'border-2 border-secondary'
-                    : ''
+                key={tier.id}
+                className={`relative group preserve-3d transition-all duration-500 ${
+                  tier.highlighted ? 'lg:scale-105 z-10' : ''
                 }`}
+                onMouseEnter={() => setHoveredTier(tier.id)}
+                onMouseLeave={() => setHoveredTier(null)}
+                style={{
+                  transform: isHovered 
+                    ? 'perspective(1000px) rotateY(-5deg) rotateX(5deg) scale(1.05)' 
+                    : 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1)',
+                }}
               >
-                {/* Tier Header */}
-                <div className="text-center pb-6 border-b border-primary/20">
+                {/* Glow Effect */}
+                {tier.highlighted && (
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
+                )}
+
+                {/* Card */}
+                <div className={`relative glass-strong rounded-2xl p-8 h-full flex flex-col ${
+                  tier.highlighted ? 'border-2 border-primary' : ''
+                }`}>
+                  {/* Badge */}
+                  {tier.highlighted && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-primary to-secondary rounded-full text-xs font-semibold text-primary-foreground">
+                      MOST POPULAR
+                    </div>
+                  )}
+
+                  {/* Icon */}
+                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${tier.color} p-[2px] mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    <div className="w-full h-full rounded-xl bg-background/90 flex items-center justify-center">
+                      <Icon className="w-8 h-8 text-primary" />
+                    </div>
+                  </div>
+
+                  {/* Name & Price */}
                   <h3 className="heading-md text-2xl mb-2">{tier.name}</h3>
                   <div className="mb-4">
-                    <span className="text-4xl font-bold gradient-text">{tier.price}</span>
+                    <span className="text-4xl font-bold gradient-text">${tier.price}</span>
+                    <span className="text-muted-foreground">/month</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{tier.description}</p>
-                </div>
 
-                {/* Features List */}
-                <div className="py-6 space-y-3">
-                  {tier.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-start space-x-3">
-                      <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span className="text-sm text-foreground">{feature}</span>
-                    </div>
-                  ))}
-                </div>
+                  {/* Description */}
+                  <p className="text-sm text-muted-foreground mb-6">{tier.description}</p>
 
-                {/* CTA Button */}
-                <div className="mt-auto pt-6">
-                  <a
-                    href={tier.stripeLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`block w-full text-center ${
+                  {/* Usage Limit */}
+                  <div className="p-3 glass rounded-lg mb-6">
+                    <p className="text-xs font-semibold text-primary mb-1">USAGE LIMIT</p>
+                    <p className="text-sm text-foreground">{tier.usageLimit}</p>
+                  </div>
+
+                  {/* Features */}
+                  <ul className="space-y-3 mb-8 flex-1">
+                    {tier.features.map((feature, i) => (
+                      <li key={i} className="flex items-start space-x-2">
+                        <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                        <span className="text-sm text-muted-foreground">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA Button */}
+                  <button
+                    onClick={() => handleSelectTier(tier.id)}
+                    className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 ${
                       tier.highlighted
-                        ? 'btn-secondary'
-                        : 'btn-primary'
+                        ? 'btn-primary'
+                        : 'btn-ghost'
                     }`}
                   >
                     Get Started
-                  </a>
+                  </button>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Additional Info */}
-        <div className="mt-16 text-center">
+        <div className="mt-16 glass-strong rounded-2xl p-8 neural-glow text-center max-w-4xl mx-auto">
+          <h3 className="heading-sm text-xl mb-4">All Plans Include</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div>
+              <div className="text-2xl font-bold gradient-text mb-2">100%</div>
+              <p className="text-sm text-muted-foreground">Accuracy Focused</p>
+            </div>
+            <div>
+              <div className="text-2xl font-bold gradient-text mb-2">24/7</div>
+              <p className="text-sm text-muted-foreground">Always Available</p>
+            </div>
+            <div>
+              <div className="text-2xl font-bold gradient-text mb-2">∞</div>
+              <p className="text-sm text-muted-foreground">Continuous Evolution</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Enterprise Contact */}
+        <div className="mt-12 text-center">
           <p className="text-muted-foreground mb-4">
-            All plans include 24/7 support and regular updates
+            Need a custom solution? Enterprise plans can be tailored to your specific needs.
           </p>
-          <Link to="/contact" className="text-primary hover:text-primary/80 font-semibold">
-            Need help choosing? Contact our team
-          </Link>
+          <button
+            onClick={() => navigate('/contact')}
+            className="btn-secondary"
+          >
+            Contact Sales
+          </button>
         </div>
       </section>
     </div>

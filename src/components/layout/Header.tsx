@@ -21,6 +21,7 @@ export function Header() {
 
   const navLinks = [
     { to: '/', label: 'Home' },
+    { to: '/about', label: 'About' },
     { to: '/news', label: 'News' },
     { to: '/pricing', label: 'Pricing' },
     { to: '/investors', label: 'Investors' },
@@ -35,11 +36,11 @@ export function Header() {
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-primary to-secondary p-[2px] group-hover:scale-110 transition-transform duration-300">
-              <div className="w-full h-full rounded-lg bg-background/90 flex items-center justify-center">
-                <span className="text-xl sm:text-2xl font-bold gradient-text">N</span>
-              </div>
-            </div>
+            <img 
+              src="https://cdn-ai.onspace.ai/onspace/files/9ShpkhYni95AhHPoX9TQEr/IMG_3600.jpeg" 
+              alt="NeurusAGi Logo" 
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-contain group-hover:scale-110 transition-transform duration-300"
+            />
             <span className="text-lg sm:text-xl font-bold gradient-text hidden sm:block">
               NeurusAGi
             </span>
