@@ -77,11 +77,15 @@
 @layer components {
   /* Glass Morphism Effect */
   .glass {
-    @apply backdrop-blur-md bg-card/5 border border-primary/5;
+    @apply backdrop-blur-md border;
+    background-color: rgb(var(--card) / 0.05);
+    border-color: rgb(var(--primary) / 0.05);
   }
 
   .glass-strong {
-    @apply backdrop-blur-lg bg-card/5 border border-primary/8;
+    @apply backdrop-blur-lg border;
+    background-color: rgb(var(--card) / 0.05);
+    border-color: rgb(var(--primary) / 0.08);
   }
 
   /* 3D Card Effect */
