@@ -68,11 +68,8 @@ export function HomePage() {
             global compliance, and unparalleled innovation.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link to="/signup" className="btn-primary text-lg px-8 py-4">
-              Get Started Free
-            </Link>
-            <Link to="/pricing" className="btn-ghost text-lg px-8 py-4">
+          <div className="flex items-center justify-center pt-4">
+            <Link to="/pricing" className="btn-primary text-lg px-8 py-4">
               View Pricing
             </Link>
           </div>

@@ -75,14 +75,16 @@
 }
 
 @layer components {
-  /* Glass Morphism Effect - EXACTLY 5% opacity black, NO blur */
+  /* Glass Morphism Effect - EXACTLY 5% opacity black, NO blur, NO haze */
   .glass {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    backdrop-filter: none !important;
     border: 1px solid rgba(0, 206, 209, 0.1);
   }
 
   .glass-strong {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: none !important;
     border: 1px solid rgba(0, 206, 209, 0.15);
   }
 
