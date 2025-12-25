@@ -75,17 +75,15 @@
 }
 
 @layer components {
-  /* Glass Morphism Effect - Barely visible backgrounds */
+  /* Glass Morphism Effect - EXACTLY 5% opacity black, NO blur */
   .glass {
-    @apply backdrop-blur-sm border;
     background-color: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 206, 209, 0.1);
+    border: 1px solid rgba(0, 206, 209, 0.1);
   }
 
   .glass-strong {
-    @apply backdrop-blur-md border;
-    background-color: rgba(0, 0, 0, 0.08);
-    border-color: rgba(0, 206, 209, 0.15);
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 206, 209, 0.15);
   }
 
   /* 3D Card Effect */
@@ -153,12 +151,16 @@
   }
 
   .btn-ghost {
-    @apply glass hover:glass-strong text-foreground px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105;
+    background-color: rgba(0, 0, 0, 0.05);
+    @apply text-foreground px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105;
+    border: 1px solid rgba(0, 206, 209, 0.15);
   }
 
   /* Input Fields */
   .input-field {
-    @apply glass px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 text-foreground placeholder:text-muted-foreground;
+    background-color: rgba(0, 0, 0, 0.05);
+    @apply px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 text-foreground placeholder:text-muted-foreground;
+    border: 1px solid rgba(0, 206, 209, 0.1);
   }
 
   /* Labeled Input Container */
@@ -177,7 +179,9 @@
 
   /* Feature Block */
   .feature-block {
-    @apply glass-strong rounded-xl p-8 card-3d neural-glow;
+    background-color: rgba(0, 0, 0, 0.05);
+    @apply rounded-xl p-8 card-3d neural-glow;
+    border: 1px solid rgba(0, 206, 209, 0.15);
   }
 
   /* Heading Styles */
