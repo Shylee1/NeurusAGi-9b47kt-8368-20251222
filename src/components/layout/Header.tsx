@@ -35,13 +35,13 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 sm:h-24 gap-6">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
+          <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group flex-shrink-0">
             <img 
-              src="https://cdn-ai.onspace.ai/onspace/files/9ShpkhYni95AhHPoX9TQEr/IMG_3600.jpeg" 
+              src="https://cdn-ai.onspace.ai/onspace/files/YqEciHnzTJvNLrQGs5XPpt/IMG_3758.jpeg" 
               alt="NeurusAGi Logo" 
-              className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-contain group-hover:scale-110 transition-transform duration-300"
+              className="w-10 h-10 sm:w-14 sm:h-14 rounded-lg object-cover group-hover:scale-110 transition-transform duration-300"
             />
-            <span className="text-xl sm:text-2xl font-bold gradient-text">
+            <span className="text-lg sm:text-2xl font-bold gradient-text whitespace-nowrap">
               NeurusAGi
             </span>
           </Link>
