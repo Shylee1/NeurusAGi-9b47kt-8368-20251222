@@ -11,139 +11,147 @@ interface Article {
 interface SphereGalleryProps {
   articles: Article[];
   onArticleClick: (article: Article) => void;
+  logoUrl?: string;
 }
 
-// Fibonacci sphere - evenly distributes N points on a sphere surface
-function fibonacciSphere(n: number): Array<{ x: number; y: number; z: number }> {
-  const pts: Array<{ x: number; y: number; z: number }> = [];
-  const phi = Math.PI * (Math.sqrt(5) - 1);
-  for (let i = 0; i < n; i++) {
-    const y = 1 - (i / (n - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const theta = phi * i;
-    pts.push({ x: Math.cos(theta) * r, y, z: Math.sin(theta) * r });
+const LOGO_URL = '/src/assets/neurus-logo-bg.jpeg';
+
+// Fibonacci sphere distribution for even spacing
+function fibonacciSphere(count: number) {
+  const points: { theta: number; phi: number }[] = [];
+  const goldenAngle = Math.PI * (1 + Math.sqrt(5));
+  for (let i = 0; i < count; i++) {
+    const theta = Math.acos(1 - (2 * (i + 0.5)) / count);
+    const phi = goldenAngle * i;
+    points.push({ theta, phi });
   }
-  return pts;
+  return points;
 }
 
-const TILE_COUNT = 50;
-const SPHERE_RADIUS = 240;
+export function SphereGallery({ articles, onArticleClick, logoUrl = LOGO_URL }: SphereGalleryProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rotationRef = useRef({ x: -15, y: 0 });
+  const targetRotationRef = useRef({ x: -15, y: 0 });
+  const isDraggingRef = useRef(false);
+  const lastPointerRef = useRef({ x: 0, y: 0 });
+  const animFrameRef = useRef<number>(0);
+  const autoRotateRef = useRef(true);
+  const [rotX, setRotX] = useState(-15);
+  const [rotY, setRotY] = useState(0);
 
-export function SphereGallery({ articles, onArticleClick }: SphereGalleryProps) {
-  // Rotation state stored in refs for smooth animation, replicated to state for render
-  const rotX = useRef(-20);
-  const rotY = useRef(0);
-  const velX = useRef(0);
-  const velY = useRef(0.12); // auto-spin speed
-  const isDragging = useRef(false);
-  const lastPointer = useRef({ x: 0, y: 0 });
-  const rafId = useRef(0);
-  const [renderRotX, setRenderRotX] = useState(-20);
-  const [renderRotY, setRenderRotY] = useState(0);
-  const hasDragged = useRef(false);
+  // Total tiles - at least 40 slots
+  const TOTAL_TILES = Math.max(40, Math.ceil(articles.length / 10) * 10 + 10);
+  const points = fibonacciSphere(TOTAL_TILES);
 
   // Responsive radius
-  const [radius, setRadius] = useState(SPHERE_RADIUS);
-  const [tileW, setTileW] = useState(96);
-  const [tileH, setTileH] = useState(64);
+  const getRadius = () => {
+    if (typeof window === 'undefined') return 200;
+    if (window.innerWidth < 480) return 130;
+    if (window.innerWidth < 768) return 160;
+    if (window.innerWidth < 1024) return 190;
+    return 220;
+  };
+
+  const [radius, setRadius] = useState(getRadius());
 
   useEffect(() => {
-    const update = () => {
-      const w = window.innerWidth;
-      if (w < 480) { setRadius(130); setTileW(60); setTileH(42); }
-      else if (w < 768) { setRadius(170); setTileW(74); setTileH(50); }
-      else if (w < 1024) { setRadius(200); setTileW(84); setTileH(56); }
-      else { setRadius(240); setTileW(96); setTileH(64); }
-    };
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
+    const handleResize = () => setRadius(getRadius());
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Animation loop with inertia
+  // Animation loop
   const animate = useCallback(() => {
-    if (!isDragging.current) {
-      rotX.current += velX.current;
-      rotY.current += velY.current;
-      // Dampen user-thrown velocity toward auto-spin
-      velX.current *= 0.94;
-      if (Math.abs(velY.current) < 0.12) velY.current += (0.12 - velY.current) * 0.02;
-      velY.current *= 0.98;
+    if (autoRotateRef.current && !isDraggingRef.current) {
+      targetRotationRef.current.y += 0.15;
     }
-    setRenderRotX(rotX.current);
-    setRenderRotY(rotY.current);
-    rafId.current = requestAnimationFrame(animate);
+    // Smooth interpolation
+    rotationRef.current.x += (targetRotationRef.current.x - rotationRef.current.x) * 0.08;
+    rotationRef.current.y += (targetRotationRef.current.y - rotationRef.current.y) * 0.08;
+    setRotX(rotationRef.current.x);
+    setRotY(rotationRef.current.y);
+    animFrameRef.current = requestAnimationFrame(animate);
   }, []);
 
   useEffect(() => {
-    rafId.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafId.current);
+    animFrameRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animFrameRef.current);
   }, [animate]);
 
-  // Pointer drag
+  // Pointer events
   const onPointerDown = (e: React.PointerEvent) => {
-    isDragging.current = true;
-    hasDragged.current = false;
-    lastPointer.current = { x: e.clientX, y: e.clientY };
-    velX.current = 0;
-    velY.current = 0;
+    isDraggingRef.current = true;
+    autoRotateRef.current = false;
+    lastPointerRef.current = { x: e.clientX, y: e.clientY };
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
-    if (!isDragging.current) return;
-    const dx = e.clientX - lastPointer.current.x;
-    const dy = e.clientY - lastPointer.current.y;
-    if (Math.abs(dx) > 2 || Math.abs(dy) > 2) hasDragged.current = true;
-    velY.current = dx * 0.35;
-    velX.current = dy * 0.25;
-    rotY.current += dx * 0.35;
-    rotX.current += dy * 0.25;
-    // Clamp vertical tilt
-    rotX.current = Math.max(-80, Math.min(80, rotX.current));
-    lastPointer.current = { x: e.clientX, y: e.clientY };
+    if (!isDraggingRef.current) return;
+    const dx = e.clientX - lastPointerRef.current.x;
+    const dy = e.clientY - lastPointerRef.current.y;
+    lastPointerRef.current = { x: e.clientX, y: e.clientY };
+    targetRotationRef.current.y += dx * 0.4;
+    targetRotationRef.current.x += dy * 0.3;
+    // Clamp vertical
+    targetRotationRef.current.x = Math.max(-70, Math.min(70, targetRotationRef.current.x));
   };
 
   const onPointerUp = () => {
-    isDragging.current = false;
-    // Resume gentle auto-spin
-    if (Math.abs(velY.current) < 0.12) velY.current = 0.12;
+    isDraggingRef.current = false;
+    setTimeout(() => { autoRotateRef.current = true; }, 3000);
   };
 
-  // Touch
-  const lastTouch = useRef({ x: 0, y: 0 });
+  // Touch events (mobile)
+  const lastTouchRef = useRef({ x: 0, y: 0 });
   const onTouchStart = (e: React.TouchEvent) => {
-    isDragging.current = true;
-    hasDragged.current = false;
-    lastTouch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    velX.current = 0;
-    velY.current = 0;
+    isDraggingRef.current = true;
+    autoRotateRef.current = false;
+    lastTouchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
   const onTouchMove = (e: React.TouchEvent) => {
+    if (!isDraggingRef.current) return;
     e.preventDefault();
-    if (!isDragging.current) return;
-    const dx = e.touches[0].clientX - lastTouch.current.x;
-    const dy = e.touches[0].clientY - lastTouch.current.y;
-    if (Math.abs(dx) > 2 || Math.abs(dy) > 2) hasDragged.current = true;
-    velY.current = dx * 0.35;
-    velX.current = dy * 0.25;
-    rotY.current += dx * 0.35;
-    rotX.current += dy * 0.25;
-    rotX.current = Math.max(-80, Math.min(80, rotX.current));
-    lastTouch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    const dx = e.touches[0].clientX - lastTouchRef.current.x;
+    const dy = e.touches[0].clientY - lastTouchRef.current.y;
+    lastTouchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    targetRotationRef.current.y += dx * 0.4;
+    targetRotationRef.current.x += dy * 0.3;
+    targetRotationRef.current.x = Math.max(-70, Math.min(70, targetRotationRef.current.x));
   };
   const onTouchEnd = () => {
-    isDragging.current = false;
-    if (Math.abs(velY.current) < 0.12) velY.current = 0.12;
+    isDraggingRef.current = false;
+    setTimeout(() => { autoRotateRef.current = true; }, 3000);
   };
 
-  const pts = fibonacciSphere(TILE_COUNT);
-  const containerH = radius * 2 + tileH * 2 + 40;
+  // Compute tile sizes
+  const getTileSize = () => {
+    if (typeof window === 'undefined') return { w: 80, h: 55 };
+    if (window.innerWidth < 480) return { w: 60, h: 42 };
+    if (window.innerWidth < 768) return { w: 70, h: 50 };
+    return { w: 85, h: 58 };
+  };
+
+  const [tileSize, setTileSize] = useState(getTileSize());
+  useEffect(() => {
+    const handleResize = () => setTileSize(getTileSize());
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div
-      className="relative select-none w-full flex flex-col items-center"
-      style={{ height: containerH, cursor: isDragging.current ? 'grabbing' : 'grab' }}
+      ref={containerRef}
+      className="relative select-none cursor-grab active:cursor-grabbing"
+      style={{
+        width: '100%',
+        height: radius * 2 + tileSize.h * 2,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        perspective: `${radius * 4}px`,
+        touchAction: 'none',
+      }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -152,165 +160,145 @@ export function SphereGallery({ articles, onArticleClick }: SphereGalleryProps) 
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      {/* Ambient glow */}
-      <div
-        className="pointer-events-none absolute"
-        style={{
-          width: radius * 2.4,
-          height: radius * 2.4,
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse at center, rgba(0,206,209,0.07) 0%, rgba(255,215,0,0.04) 45%, transparent 70%)',
-        }}
-      />
-      {/* Equator ring */}
-      <div
-        className="pointer-events-none absolute rounded-full"
-        style={{
-          width: radius * 2.1,
-          height: radius * 2.1,
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          border: '1px solid rgba(0,206,209,0.08)',
-          borderRadius: '50%',
-        }}
-      />
-
-      {/* 3D Scene wrapper */}
+      {/* Ambient glow behind sphere */}
       <div
         style={{
           position: 'absolute',
-          top: '50%',
-          left: '50%',
+          width: radius * 2.2,
+          height: radius * 2.2,
+          borderRadius: '50%',
+          background: 'radial-gradient(ellipse at center, rgba(0,206,209,0.06) 0%, rgba(255,215,0,0.03) 50%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* 3D scene */}
+      <div
+        style={{
+          position: 'relative',
           width: 0,
           height: 0,
-          perspective: radius * 5,
+          transformStyle: 'preserve-3d',
+          transform: `rotateX(${rotX}deg) rotateY(${rotY}deg)`,
+          transition: isDraggingRef.current ? 'none' : undefined,
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            transformStyle: 'preserve-3d',
-            transform: `rotateX(${renderRotX}deg) rotateY(${renderRotY}deg)`,
-          }}
-        >
-          {pts.map((pt, i) => {
-            const article = articles[i] || null;
+        {points.map((point, i) => {
+          const article = articles[i] || null;
+          const sinTheta = Math.sin(point.theta);
+          const x = radius * sinTheta * Math.cos(point.phi);
+          const y = radius * sinTheta * Math.sin(point.phi);
+          const z = radius * Math.cos(point.theta);
 
-            // Position tile at point on sphere surface
-            // rotateY then rotateX to face outward
-            const yawDeg = (Math.atan2(pt.x, pt.z) * 180) / Math.PI;
-            const pitchDeg = -(Math.asin(pt.y) * 180) / Math.PI;
+          // Face outward: rotateY first, then rotateX
+          const rotY2 = -Math.atan2(x, z) * (180 / Math.PI);
+          const rotX2 = Math.atan2(y, Math.sqrt(x * x + z * z)) * (180 / Math.PI);
 
-            return (
-              <div
-                key={i}
-                onClick={(e) => {
-                  if (!hasDragged.current && article) {
-                    e.stopPropagation();
-                    onArticleClick(article);
-                  }
-                }}
-                style={{
-                  position: 'absolute',
-                  width: tileW,
-                  height: tileH,
-                  marginLeft: -tileW / 2,
-                  marginTop: -tileH / 2,
-                  transform: `rotateY(${yawDeg}deg) rotateX(${pitchDeg}deg) translateZ(${radius}px)`,
-                  transformStyle: 'preserve-3d',
-                  backfaceVisibility: 'hidden',
-                  WebkitBackfaceVisibility: 'hidden',
-                  borderRadius: 7,
-                  overflow: 'hidden',
-                  cursor: article ? 'pointer' : 'default',
-                  border: article
-                    ? '1px solid rgba(0,206,209,0.45)'
-                    : '1px solid rgba(0,206,209,0.1)',
-                  boxShadow: article
-                    ? '0 0 14px rgba(0,206,209,0.22), inset 0 0 6px rgba(0,206,209,0.06)'
-                    : 'none',
-                  transition: 'border-color 0.2s, box-shadow 0.2s',
-                }}
-                className={article ? 'hover:border-primary/80 hover:shadow-primary/50' : ''}
-              >
-                {article ? (
+          return (
+            <div
+              key={i}
+              onClick={(e) => {
+                if (!isDraggingRef.current && article) {
+                  e.stopPropagation();
+                  onArticleClick(article);
+                }
+              }}
+              style={{
+                position: 'absolute',
+                width: tileSize.w,
+                height: tileSize.h,
+                marginLeft: -tileSize.w / 2,
+                marginTop: -tileSize.h / 2,
+                transform: `rotateY(${rotY2}deg) rotateX(${rotX2}deg) translateZ(${radius}px)`,
+                transformStyle: 'preserve-3d',
+                cursor: article ? 'pointer' : 'default',
+                borderRadius: 8,
+                overflow: 'hidden',
+                border: article ? '1px solid rgba(0,206,209,0.4)' : '1px solid rgba(0,206,209,0.12)',
+                boxShadow: article ? '0 0 12px rgba(0,206,209,0.2)' : 'none',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                backfaceVisibility: 'hidden',
+              }}
+              className={article ? 'hover:scale-110' : ''}
+            >
+              {article ? (
+                <>
+                  {/* Article tile */}
                   <div
                     style={{
                       width: '100%',
                       height: '100%',
-                      backgroundImage: article.thumbnail ? `url(${article.thumbnail})` : undefined,
+                      backgroundImage: article.thumbnail ? `url(${article.thumbnail})` : 'none',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
-                      backgroundColor: 'rgba(0,0,0,0.85)',
+                      backgroundColor: 'rgba(0,0,0,0.7)',
                       position: 'relative',
                     }}
                   >
-                    {/* Gradient overlay */}
                     <div
                       style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 55%, rgba(0,206,209,0.06) 100%)',
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'flex-end',
-                        padding: '4px 5px',
+                        padding: '5px 6px',
                       }}
                     >
                       <p
                         style={{
-                          fontSize: tileW < 70 ? 6.5 : 7.5,
-                          fontWeight: 700,
-                          color: '#d0fffe',
-                          lineHeight: 1.25,
+                          fontSize: tileSize.w < 70 ? '7px' : '8px',
+                          fontWeight: 600,
+                          color: '#e0ffff',
+                          lineHeight: 1.2,
                           display: '-webkit-box',
-                          WebkitLineClamp: 3,
+                          WebkitLineClamp: 2,
                           WebkitBoxOrient: 'vertical',
                           overflow: 'hidden',
-                          textShadow: '0 1px 4px rgba(0,0,0,0.9)',
-                          letterSpacing: 0.2,
+                          textShadow: '0 1px 3px rgba(0,0,0,0.8)',
                         }}
                       >
                         {article.title}
                       </p>
                     </div>
                   </div>
-                ) : (
-                  /* Empty tile - subtle logo watermark */
-                  <div
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      backgroundImage: "url('/neurus-logo.jpeg')",
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      opacity: 0.12,
-                      backgroundColor: '#050505',
-                    }}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
+                </>
+              ) : (
+                /* Empty tile - show logo */
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    backgroundImage: `url(${logoUrl})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    opacity: 0.18,
+                    backgroundColor: '#000',
+                  }}
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Drag hint */}
-      <p
-        className="absolute bottom-0 left-0 right-0 text-center pointer-events-none"
+      <div
         style={{
-          fontSize: 11,
-          color: 'rgba(0,206,209,0.45)',
-          letterSpacing: '0.12em',
+          position: 'absolute',
+          bottom: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          fontSize: '11px',
+          color: 'rgba(0,206,209,0.5)',
+          pointerEvents: 'none',
+          letterSpacing: '0.1em',
           textTransform: 'uppercase',
         }}
       >
-        Drag to spin &bull; Click to read
-      </p>
+        Drag to explore &bull; Click an article to read
+      </div>
     </div>
   );
 }

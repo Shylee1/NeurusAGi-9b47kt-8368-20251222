@@ -43,7 +43,7 @@
     overflow-x: hidden;
   }
 
-  /* Fixed Background Logo - local asset, true black bg */
+  /* Fixed Background Logo - New NeurusAGi logo with text */
   body::before {
     content: '';
     position: fixed;
@@ -51,11 +51,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/neurus-logo.jpeg');
+    background-image: url('https://cdn-ai.onspace.ai/onspace/files/YqEciHnzTJvNLrQGs5XPpt/IMG_3758.jpeg');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.12;
+    opacity: 0.1;
     z-index: -1;
     pointer-events: none;
   }
