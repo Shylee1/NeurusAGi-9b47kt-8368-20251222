@@ -43,19 +43,20 @@
     overflow-x: hidden;
   }
 
-  /* Fixed Background Logo - New NeurusAGi logo with text */
+  /* Fixed Background Logo */
   body::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('https://cdn-ai.onspace.ai/onspace/files/YqEciHnzTJvNLrQGs5XPpt/IMG_3758.jpeg');
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70vmin;
+    height: 70vmin;
+    background-image: url('/neurus-logo-bg.jpeg');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.1;
+    opacity: 0.18;
     z-index: -1;
     pointer-events: none;
   }
@@ -260,6 +261,12 @@
 }
 
 .animate-float { animation: float 6s ease-in-out infinite; }
+
+/* Sphere tile hover */
+.sphere-tile:hover {
+  box-shadow: 0 0 24px rgba(0,206,209,0.55), 0 0 8px rgba(255,215,0,0.3), inset 0 0 10px rgba(0,0,0,0.4) !important;
+  border-color: rgba(0,206,209,0.8) !important;
+}
 .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
 .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
 

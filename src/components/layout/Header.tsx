@@ -37,7 +37,7 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group flex-shrink-0">
             <img 
-              src="https://cdn-ai.onspace.ai/onspace/files/YqEciHnzTJvNLrQGs5XPpt/IMG_3758.jpeg" 
+              src="/neurus-logo-bg.jpeg" 
               alt="NeurusAGi Logo" 
               className="w-10 h-10 sm:w-14 sm:h-14 rounded-lg object-cover group-hover:scale-110 transition-transform duration-300"
             />
