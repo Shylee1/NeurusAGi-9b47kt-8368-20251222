@@ -37,8 +37,26 @@ export function SphereGallery({ articles, onArticleClick }: SphereGalleryProps) 
   const rafRef = useRef<number>(0);
   const [, setTick] = useState(0);
 
-  const TOTAL_TILES = Math.max(42, articles.length + Math.ceil((42 - articles.length) / 2) * 2);
+  // Checkerboard: build an interleaved tile list where article tiles
+  // and logo tiles alternate across the sphere positions
+  const TOTAL_TILES = Math.max(42, articles.length * 2);
   const points = fibonacciSphere(TOTAL_TILES);
+
+  // Build checkerboard tile data: index determines article vs. logo
+  // Even indices = article, odd = logo (checkerboard alternation)
+  const buildTiles = () => {
+    const tileArr: (typeof articles[number] | null)[] = [];
+    let articleIdx = 0;
+    for (let i = 0; i < TOTAL_TILES; i++) {
+      if (i % 2 === 0 && articleIdx < articles.length) {
+        tileArr.push(articles[articleIdx++]);
+      } else {
+        tileArr.push(null);
+      }
+    }
+    return tileArr;
+  };
+  const tiles = buildTiles();
 
   const getRadius = () => {
     if (typeof window === 'undefined') return 210;
@@ -97,7 +115,8 @@ export function SphereGallery({ articles, onArticleClick }: SphereGalleryProps) 
     const dy = e.clientY - lastPos.current.y;
     lastPos.current = { x: e.clientX, y: e.clientY };
     targetY.current += dx * 0.45;
-    targetX.current = Math.max(-75, Math.min(75, targetX.current + dy * 0.35));
+    // Correct axis: dragging up tilts sphere up (positive dy = tilt down)
+    targetX.current = Math.max(-75, Math.min(75, targetX.current - dy * 0.35));
   };
   const onPointerUp = () => {
     dragging.current = false;
@@ -118,7 +137,7 @@ export function SphereGallery({ articles, onArticleClick }: SphereGalleryProps) 
     const dy = e.touches[0].clientY - lastTouch.current.y;
     lastTouch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     targetY.current += dx * 0.45;
-    targetX.current = Math.max(-75, Math.min(75, targetX.current + dy * 0.35));
+    targetX.current = Math.max(-75, Math.min(75, targetX.current - dy * 0.35));
   };
   const onTouchEnd = () => {
     dragging.current = false;
@@ -172,7 +191,7 @@ export function SphereGallery({ articles, onArticleClick }: SphereGalleryProps) 
         }}
       >
         {points.map((pt, i) => {
-          const article = articles[i] || null;
+          const article = tiles[i] || null;
           const sinT = Math.sin(pt.theta);
           const cosT = Math.cos(pt.theta);
           const sinP = Math.sin(pt.phi);

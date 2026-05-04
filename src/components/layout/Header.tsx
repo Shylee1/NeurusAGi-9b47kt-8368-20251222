@@ -113,8 +113,8 @@ export function Header() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden glass-strong border-t border-primary/20">
-          <div className="px-4 py-6 space-y-4">
+        <div className="md:hidden glass-strong border-t border-primary/20" style={{ width: '100%' }}>
+          <div className="px-4 py-6 space-y-4" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
             {navLinks.map((link) => (
               <Link
                 key={link.to}
