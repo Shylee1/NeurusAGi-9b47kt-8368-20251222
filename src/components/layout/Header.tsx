@@ -31,7 +31,7 @@ export function Header() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass-strong border-b border-primary/20">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-primary/20" style={{ background: 'rgba(0,4,8,0.88)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 sm:h-24 gap-6">
           {/* Logo */}
@@ -113,8 +113,22 @@ export function Header() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden glass-strong border-t border-primary/20" style={{ width: '100%' }}>
-          <div className="px-4 py-6 space-y-4" style={{ maxWidth: '100%', boxSizing: 'border-box' }}>
+        <div
+          className="md:hidden border-t border-primary/20"
+          style={{
+            width: '280px',
+            maxWidth: '85vw',
+            marginLeft: 'auto',
+            background: 'rgba(0,8,12,0.96)',
+            boxShadow: '-4px 4px 40px rgba(0,206,209,0.18), 0 0 0 1px rgba(0,206,209,0.12)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderLeft: '1px solid rgba(0,206,209,0.18)',
+            borderBottom: '1px solid rgba(0,206,209,0.12)',
+            borderRadius: '0 0 0 16px',
+          }}
+        >
+          <div className="px-5 py-6 space-y-4">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
