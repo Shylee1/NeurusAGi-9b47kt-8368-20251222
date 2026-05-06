@@ -131,8 +131,8 @@ export function HomePage() {
         </div>
 
         {/* Sub */}
-        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-10 text-center z-10 leading-relaxed">
-          NeurusAGi is not another AI model. It is the first true artificial general intelligence, engineered from biological cognition, quantum-powered, and built for a world that current frameworks can never reach.
+        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-10 text-center z-10 leading-relaxed">First artificial general intelligence, engineered from biological cognition, quantum-powered, and built for a world that current frameworks can never reach.
+
         </p>
 
         {/* CTA row */}
