@@ -140,9 +140,9 @@ export function HomePage() {
           
 
           
-          <Link to="/pricing" className="btn-ghost flex items-center gap-2 text-base px-8 py-3.5 w-full sm:w-auto justify-center">
-            View Pricing
-          </Link>
+          
+
+          
         </div>
 
         {/* Hero demo panel */}
