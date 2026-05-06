@@ -20,13 +20,13 @@ export function Header() {
   };
 
   const navLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/about', label: 'About' },
-    { to: '/news', label: 'News' },
-    { to: '/pricing', label: 'Pricing' },
-    { to: '/investors', label: 'Investors' },
-    { to: '/contact', label: 'Contact' },
-  ];
+  { to: '/', label: 'Home' },
+  { to: '/about', label: 'About' },
+  { to: '/news', label: 'News' },
+  { to: '/pricing', label: 'Pricing' },
+  { to: '/investors', label: 'Investors' },
+  { to: '/contact', label: 'Contact' }];
+
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -36,11 +36,11 @@ export function Header() {
         <div className="flex items-center justify-between h-20 sm:h-24 gap-6">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group flex-shrink-0">
-            <img 
-              src="/neurus-logo-bg.jpeg" 
-              alt="NeurusAGi Logo" 
-              className="w-10 h-10 sm:w-14 sm:h-14 rounded-lg object-cover group-hover:scale-110 transition-transform duration-300"
-            />
+            <img
+              src="/neurus-logo-bg.jpeg"
+              alt="NeurusAGi Logo"
+              className="w-10 h-10 sm:w-14 sm:h-14 rounded-lg group-hover:scale-110 transition-transform duration-300 object-contain" />
+            
             <span className="text-lg sm:text-2xl font-bold gradient-text whitespace-nowrap">
               NeurusAGi
             </span>
@@ -48,49 +48,49 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`text-sm font-medium transition-colors duration-300 ${
-                  isActive(link.to)
-                    ? 'text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
+            {navLinks.map((link) =>
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`text-sm font-medium transition-colors duration-300 ${
+              isActive(link.to) ?
+              'text-primary' :
+              'text-muted-foreground hover:text-foreground'}`
+              }>
+              
                 {link.label}
               </Link>
-            ))}
+            )}
           </nav>
 
           {/* User Menu */}
           <div className="hidden md:flex items-center space-x-4">
-            {user ? (
-              <>
-                {isAdmin && (
-                  <Link
-                    to="/admin"
-                    className="btn-secondary text-sm"
-                  >
+            {user ?
+            <>
+                {isAdmin &&
+              <Link
+                to="/admin"
+                className="btn-secondary text-sm">
+                
                     Admin
                   </Link>
-                )}
+              }
                 <Link
-                  to="/dashboard"
-                  className="btn-ghost text-sm flex items-center space-x-2"
-                >
+                to="/dashboard"
+                className="btn-ghost text-sm flex items-center space-x-2">
+                
                   <User className="w-4 h-4" />
                   <span>{profile?.username || 'Dashboard'}</span>
                 </Link>
                 <button
-                  onClick={handleLogout}
-                  className="text-muted-foreground hover:text-destructive transition-colors"
-                >
+                onClick={handleLogout}
+                className="text-muted-foreground hover:text-destructive transition-colors">
+                
                   <LogOut className="w-5 h-5" />
                 </button>
-              </>
-            ) : (
-              <>
+              </> :
+
+            <>
                 <Link to="/login" className="btn-ghost text-sm">
                   Login
                 </Link>
@@ -98,103 +98,103 @@ export function Header() {
                   Get Started
                 </Link>
               </>
-            )}
+            }
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-foreground hover:text-primary transition-colors"
-          >
+            className="md:hidden text-foreground hover:text-primary transition-colors">
+            
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div
-          className="md:hidden border-t border-primary/20"
-          style={{
-            width: '280px',
-            maxWidth: '85vw',
-            marginLeft: 'auto',
-            background: 'rgba(0,8,12,0.96)',
-            boxShadow: '-4px 4px 40px rgba(0,206,209,0.18), 0 0 0 1px rgba(0,206,209,0.12)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            borderLeft: '1px solid rgba(0,206,209,0.18)',
-            borderBottom: '1px solid rgba(0,206,209,0.12)',
-            borderRadius: '0 0 0 16px',
-          }}
-        >
+      {isMenuOpen &&
+      <div
+        className="md:hidden border-t border-primary/20"
+        style={{
+          width: '280px',
+          maxWidth: '85vw',
+          marginLeft: 'auto',
+          background: 'rgba(0,8,12,0.96)',
+          boxShadow: '-4px 4px 40px rgba(0,206,209,0.18), 0 0 0 1px rgba(0,206,209,0.12)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderLeft: '1px solid rgba(0,206,209,0.18)',
+          borderBottom: '1px solid rgba(0,206,209,0.12)',
+          borderRadius: '0 0 0 16px'
+        }}>
+        
           <div className="px-5 py-6 space-y-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                onClick={() => setIsMenuOpen(false)}
-                className={`block text-base font-medium transition-colors duration-300 ${
-                  isActive(link.to)
-                    ? 'text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
+            {navLinks.map((link) =>
+          <Link
+            key={link.to}
+            to={link.to}
+            onClick={() => setIsMenuOpen(false)}
+            className={`block text-base font-medium transition-colors duration-300 ${
+            isActive(link.to) ?
+            'text-primary' :
+            'text-muted-foreground hover:text-foreground'}`
+            }>
+            
                 {link.label}
               </Link>
-            ))}
+          )}
             
             <div className="pt-4 border-t border-primary/20 space-y-3">
-              {user ? (
-                <>
-                  {isAdmin && (
-                    <Link
-                      to="/admin"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block btn-secondary text-center text-sm"
-                    >
+              {user ?
+            <>
+                  {isAdmin &&
+              <Link
+                to="/admin"
+                onClick={() => setIsMenuOpen(false)}
+                className="block btn-secondary text-center text-sm">
+                
                       Admin Dashboard
                     </Link>
-                  )}
+              }
                   <Link
-                    to="/dashboard"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block btn-ghost text-center text-sm"
-                  >
+                to="/dashboard"
+                onClick={() => setIsMenuOpen(false)}
+                className="block btn-ghost text-center text-sm">
+                
                     My Dashboard
                   </Link>
                   <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full btn-ghost text-center text-sm text-destructive"
-                  >
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+                className="w-full btn-ghost text-center text-sm text-destructive">
+                
                     Logout
                   </button>
-                </>
-              ) : (
-                <>
+                </> :
+
+            <>
                   <Link
-                    to="/login"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block btn-ghost text-center text-sm"
-                  >
+                to="/login"
+                onClick={() => setIsMenuOpen(false)}
+                className="block btn-ghost text-center text-sm">
+                
                     Login
                   </Link>
                   <Link
-                    to="/signup"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block btn-primary text-center text-sm"
-                  >
+                to="/signup"
+                onClick={() => setIsMenuOpen(false)}
+                className="block btn-primary text-center text-sm">
+                
                     Get Started
                   </Link>
                 </>
-              )}
+            }
             </div>
           </div>
         </div>
-      )}
-    </header>
-  );
+      }
+    </header>);
+
 }
