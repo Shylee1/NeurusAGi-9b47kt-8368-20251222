@@ -54,9 +54,7 @@ export function AboutPage() {
         <div className="text-center max-w-4xl mx-auto mb-16">
           <h1 className="heading-xl mb-6">About NeurusAGi</h1>
           <p className="text-xl text-muted-foreground leading-relaxed">
-            The world's first true <span className="gradient-text font-semibold">Artificial General Intelligence</span>, 
-            engineered by <span className="text-primary font-semibold">Jeremy Taylor</span> to deliver unprecedented 
-            accuracy, creativity, and quantum-enhanced capabilities.
+            The world's first true <span className="gradient-text font-semibold">Artificial General Intelligence</span>, quantum-powered, built without a server farm, and designed to replicate the full cognitive architecture of the human brain.
           </p>
         </div>
 

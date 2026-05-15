@@ -35,15 +35,11 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 sm:h-24 gap-6">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group flex-shrink-0">
+          <Link to="/" className="flex items-center group flex-shrink-0">
             <img
               src="/neurus-logo-bg.jpeg"
               alt="NeurusAGi Logo"
-              className="w-10 h-10 sm:w-14 sm:h-14 rounded-lg group-hover:scale-110 transition-transform duration-300 object-contain" />
-            
-            <span className="text-lg sm:text-2xl font-bold gradient-text whitespace-nowrap">
-              NeurusAGi
-            </span>
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl group-hover:scale-105 transition-transform duration-300 object-contain" />
           </Link>
 
           {/* Desktop Navigation */}
